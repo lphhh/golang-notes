@@ -21,7 +21,6 @@ func main() {
 		case event := <-fMarkPrice:
 			for _, v := range event {
 				if v.Symbol == "DYDXUSDT" {
-
 					fmt.Println("future", v, time.UnixMilli(v.Time).Format("2006-01-02 15:04:05"))
 					publishAt := time.Unix(v.Time/1000, 0)
 					nextFundingTime := time.Unix(v.NextFundingTime/1000, 0)
