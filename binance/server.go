@@ -19,14 +19,14 @@ var futuresClient = binance.NewFuturesClient(apiKey, secretKey)   // USDT-M Futu
 var deliveryClient = binance.NewDeliveryClient(apiKey, secretKey) // Coin-M Futures
 
 func ListPrices() {
-	prices, err := futuresClient.NewListPricesService().Symbol("DYDXUSDT").Do(context.Background())
+	prices, err := futuresClient.NewExchangeInfoService().Do(context.Background())
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-	for _, p := range prices {
-		fmt.Println(p)
-	}
+	//for _, p := range prices {
+		fmt.Println(prices.Symbols)
+	//}
 }
 
 func SocketF() {
