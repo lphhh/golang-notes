@@ -1,6 +1,7 @@
 package main
 
 import (
+	"binance/database"
 	"context"
 	"fmt"
 	"github.com/adshao/go-binance/v2"
@@ -29,48 +30,84 @@ func ListPrices() {
 }
 
 func SocketF() {
+	fmt.Println("start at" + time.Now().String())
+	now := time.Now()
+	database.DB.Save(&Log{
+		Msg:  "start",
+		Time: &now,
+	})
 	wsDepthHandler := func(event futures.WsAllMarkPriceEvent) {
-		for _,v := range event {
-			fmt.Println(v)
-		}
+		fMarkPrice <- event
 	}
 	errHandler := func(err error) {
 		fmt.Println(err)
+		now := time.Now()
+		database.DB.Save(&Log{
+			Msg:  err.Error(),
+			Time: &now,
+		})
+		go func() {
+			quit <- true
+		}()
+		return
 	}
-	doneC, stopC, err := futures.WsAllMarkPriceServe(wsDepthHandler, errHandler)
+	doneC, stopC, err := futures.WsAllMarkPriceServeWithRate(1*time.Second, wsDepthHandler, errHandler)
 	if err != nil {
 		fmt.Println(err)
+		now := time.Now()
+		database.DB.Save(&Log{
+			Msg:  err.Error(),
+			Time: &now,
+		})
+		go func() {
+			quit <- true
+		}()
 		return
 	}
 	// use stopC to exit
 	go func() {
-		time.Sleep(5 * time.Second)
+		time.Sleep(10 * time.Second)
+		quit <- true
 		stopC <- struct{}{}
 	}()
 	// remove this if you do not want to be blocked here
 	<-doneC
 }
 
-
 func SocketS() {
 	wsDepthHandler := func(event binance.WsAllMarketsStatEvent) {
-		for _,v := range event {
-			fmt.Println(v)
-		}
+		sMarkPrice <- event
 	}
 	errHandler := func(err error) {
 		fmt.Println(err)
+		now := time.Now()
+		database.DB.Save(&Log{
+			Msg:  err.Error(),
+			Time: &now,
+		})
+		go func() {
+			quit <- true
+		}()
+		return
 	}
-	doneC, stopC, err := binance.WsAllMarketsStatServe(wsDepthHandler, errHandler)
+	doneC, _, err := binance.WsAllMarketsStatServe(wsDepthHandler, errHandler)
 	if err != nil {
 		fmt.Println(err)
+		now := time.Now()
+		database.DB.Save(&Log{
+			Msg:  err.Error(),
+			Time: &now,
+		})
+		go func() {
+			quit <- true
+		}()
 		return
 	}
 	// use stopC to exit
-	go func() {
-		time.Sleep(5 * time.Second)
-		stopC <- struct{}{}
-	}()
+	//go func() {
+	//	time.Sleep(5 * time.Second)
+	//	stopC <- struct{}{}
+	//}()
 	// remove this if you do not want to be blocked here
 	<-doneC
 }
