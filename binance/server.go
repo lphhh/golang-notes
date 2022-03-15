@@ -25,11 +25,11 @@ func ListPrices() {
 		return
 	}
 	//for _, p := range prices {
-		fmt.Println(prices.Symbols)
+	fmt.Println(prices.Symbols)
 	//}
 }
 
-func SocketF() {
+func SocketF(fMarkPrice chan futures.WsAllMarkPriceEvent) {
 	fmt.Println("start at" + time.Now().String())
 	now := time.Now()
 	database.DB.Save(&Log{
@@ -46,12 +46,9 @@ func SocketF() {
 			Msg:  err.Error(),
 			Time: &now,
 		})
-		go func() {
-			quit <- true
-		}()
 		return
 	}
-	doneC, stopC, err := futures.WsAllMarkPriceServeWithRate(1*time.Second, wsDepthHandler, errHandler)
+	doneC, _, err := futures.WsAllMarkPriceServeWithRate(1*time.Second, wsDepthHandler, errHandler)
 	if err != nil {
 		fmt.Println(err)
 		now := time.Now()
@@ -59,22 +56,19 @@ func SocketF() {
 			Msg:  err.Error(),
 			Time: &now,
 		})
-		go func() {
-			quit <- true
-		}()
 		return
 	}
 	// use stopC to exit
-	go func() {
-		time.Sleep(10 * time.Second)
-		quit <- true
-		stopC <- struct{}{}
-	}()
+	//go func() {
+	//	time.Sleep(10 * time.Second)
+	//	quit <- true
+	//	stopC <- struct{}{}
+	//}()
 	// remove this if you do not want to be blocked here
 	<-doneC
 }
 
-func SocketS() {
+func SocketS(sMarkPrice chan binance.WsAllMarketsStatEvent) {
 	wsDepthHandler := func(event binance.WsAllMarketsStatEvent) {
 		sMarkPrice <- event
 	}
@@ -85,9 +79,6 @@ func SocketS() {
 			Msg:  err.Error(),
 			Time: &now,
 		})
-		go func() {
-			quit <- true
-		}()
 		return
 	}
 	doneC, _, err := binance.WsAllMarketsStatServe(wsDepthHandler, errHandler)
@@ -98,9 +89,6 @@ func SocketS() {
 			Msg:  err.Error(),
 			Time: &now,
 		})
-		go func() {
-			quit <- true
-		}()
 		return
 	}
 	// use stopC to exit

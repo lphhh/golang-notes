@@ -1,0 +1,20 @@
+version: '3.1'
+
+services:
+  web:
+    image: golang:latest
+    restart: always
+    volumes:
+      - ./:/go/src/${APP_NAME}
+    working_dir: /go/src/${APP_NAME}
+    environment:
+      #当前默认时区
+      TZ: Asia/Shanghai
+    networks:
+        - nginx-proxy_nginx-proxy
+    command: ./${APP_NAME} CollectMarketData
+
+networks:
+  nginx-proxy_nginx-proxy:
+      external: true
+

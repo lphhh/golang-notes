@@ -9,12 +9,10 @@ import (
 	"time"
 )
 
-var sMarkPrice = make(chan binance.WsAllMarketsStatEvent)
-var fMarkPrice = make(chan futures.WsAllMarkPriceEvent)
-var quit = make(chan bool)
-
 func main() {
-	go SocketF()
+	var fMarkPrice = make(chan futures.WsAllMarkPriceEvent)
+	var sMarkPrice = make(chan binance.WsAllMarketsStatEvent)
+	go SocketF(fMarkPrice)
 	//go SocketS()
 	for {
 		select {
@@ -42,14 +40,6 @@ func main() {
 					fmt.Println("spot", time.UnixMilli(v.Time).Format("2006-01-02 15:04:05"))
 				}
 			}
-		case <-quit:
-			fmt.Println("accept quit signal", time.Now().Format("2006-01-02 15:04:05"))
-			now := time.Now()
-			database.DB.Save(&Log{
-				Msg:  "accept quit signal",
-				Time: &now,
-			})
-			go SocketF()
 		}
 	}
 	//SocketS()
