@@ -5,7 +5,9 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"reptile/database"
 	"strconv"
+	"sync"
 	"time"
 
 	"github.com/tealeg/xlsx"
@@ -14,6 +16,7 @@ import (
 var count int
 
 func main() {
+	var wg sync.WaitGroup
 	var client = &http.Client{
 		Timeout: time.Second * 5,
 	}
@@ -21,14 +24,91 @@ func main() {
 	// followerMax == 149448694
 	var start int = 1
 	var followerCount string
-	for i := 79000; i < 149448695; i += 10000 {
-		followerCount = strconv.Itoa(start) + "-" + strconv.Itoa(i)
-		getData(client, followerCount, "desc")
-		getData(client, followerCount, "asc")
-		start = i
-		time.Sleep(1 * time.Second)
-	}
-
+	wg.Add(1)
+	go func() {
+		for i := 70000; i < 15000000; i += 10000 {
+			followerCount = strconv.Itoa(start) + "-" + strconv.Itoa(i)
+			getData(client, followerCount, "desc")
+			getData(client, followerCount, "asc")
+			start = i
+			//time.Sleep(1 * time.Second)
+		}
+		wg.Done()
+	}()
+	wg.Add(1)
+	go func() {
+		for i := 15000000; i < 30000000; i += 10000 {
+			followerCount = strconv.Itoa(start) + "-" + strconv.Itoa(i)
+			getData(client, followerCount, "desc")
+			getData(client, followerCount, "asc")
+			start = i
+			//time.Sleep(1 * time.Second)
+		}
+		wg.Done()
+	}()
+	wg.Add(1)
+	go func() {
+		for i := 30000000; i < 45000000; i += 10000 {
+			followerCount = strconv.Itoa(start) + "-" + strconv.Itoa(i)
+			getData(client, followerCount, "desc")
+			getData(client, followerCount, "asc")
+			start = i
+			//time.Sleep(1 * time.Second)
+		}
+		wg.Done()
+	}()
+	wg.Add(1)
+	go func() {
+		for i := 45000000; i < 60000000; i += 10000 {
+			followerCount = strconv.Itoa(start) + "-" + strconv.Itoa(i)
+			getData(client, followerCount, "desc")
+			getData(client, followerCount, "asc")
+			start = i
+			//time.Sleep(1 * time.Second)
+		}
+		wg.Done()
+	}()
+	wg.Add(1)
+	go func() {
+		for i := 60000000; i < 75000000; i += 10000 {
+			followerCount = strconv.Itoa(start) + "-" + strconv.Itoa(i)
+			getData(client, followerCount, "desc")
+			getData(client, followerCount, "asc")
+			start = i
+			//time.Sleep(1 * time.Second)
+		}
+		wg.Done()
+	}()
+	wg.Add(1)
+	go func() {
+		for i := 75000000; i < 90000000; i += 10000 {
+			followerCount = strconv.Itoa(start) + "-" + strconv.Itoa(i)
+			getData(client, followerCount, "desc")
+			getData(client, followerCount, "asc")
+			start = i
+			//time.Sleep(1 * time.Second)
+		}
+		wg.Done()
+	}()
+	wg.Add(1)
+	go func() {
+		for i := 90000000; i < 105000000; i += 10000 {
+			followerCount = strconv.Itoa(start) + "-" + strconv.Itoa(i)
+			getData(client, followerCount, "desc")
+			getData(client, followerCount, "asc")
+			start = i
+			//time.Sleep(1 * time.Second)
+		}
+		wg.Done()
+	}()
+	//for i := 70000; i < 149450000; i += 10000 {
+	//	followerCount = strconv.Itoa(start) + "-" + strconv.Itoa(i)
+	//	getData(client, followerCount, "desc", quit, i)
+	//	getData(client, followerCount, "asc", quit, i)
+	//	start = i
+	//	//time.Sleep(1 * time.Second)
+	//}
+	wg.Wait()
 }
 
 func getData(client *http.Client, followerCount, orderBy string) {
@@ -46,9 +126,9 @@ func getData(client *http.Client, followerCount, orderBy string) {
 			return
 		}
 
-		rqst.Header.Add("Cookie", "CMM_A_C_ID=7bad0832-a2f3-11ec-88e3-ee93e641e198; Hm_lvt_1f19c27e7e3e3255a5c79248a7f4bdf1=1647192718; LOGIN-TOKEN-FORSNS=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBJZCI6MTAwMDAsImV4cGlyZV90aW1lIjoxNjQ3ODAyODAwLCJpYXQiOjE2NDcyNzMxODksImlkIjozNTMyMDY4fQ.edrJOkEkagmd6jEsrsm9YTohLEwag96TPsAEojczNxM; Hm_lpvt_1f19c27e7e3e3255a5c79248a7f4bdf1=1647273191; Qs_lvt_411649=1647192718%2C1647273191; Qs_pv_411649=2387410460744642000%2C1410934070754850300%2C2618486341181278700%2C4372307893197005300%2C3507494727943831600")
+		rqst.Header.Add("Cookie", "CMM_A_C_ID=93153ab3-a355-11ec-88e3-ee93e641e198; Hm_lvt_1f19c27e7e3e3255a5c79248a7f4bdf1=1647234848; UM_distinctid=17f86dcd430213-0489d25e830a6b-113f645d-1fa400-17f86dcd4313aa; Qs_lvt_411649=1647234849%2C1647235091%2C1647235096%2C1647241604%2C1647312516; LOGIN-TOKEN-FORSNS=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBJZCI6MTAwMDAsImV4cGlyZV90aW1lIjoxNjQ3ODg5MjAwLCJpYXQiOjE2NDczMTI1NTQsImlkIjozNTMyMDY4fQ.OtyPYW8ClnYvCBucjfnS1OOJlsI3-cKFjhtgBTKsmIk; Hm_lpvt_1f19c27e7e3e3255a5c79248a7f4bdf1=1647312582; Qs_pv_411649=3063137796106164000%2C3019850414182804500%2C1381674642571697200%2C1105717118416939100%2C3780877900242174000")
 		rqst.Header.Add("origin", "https://www.chanmama.com")
-		rqst.Header.Add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36")
+		rqst.Header.Add("user-agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36")
 		rqst.Header.Add("referer", "https://www.chanmama.com/bloggerRank?keyword=")
 
 		rsps, err := client.Do(rqst)
@@ -65,10 +145,26 @@ func getData(client *http.Client, followerCount, orderBy string) {
 
 		// fmt.Println(author.Data.List)
 
-		Export(author.Data.List)
+		//Export(author.Data.List)
+		SaveDatabase(author.Data.List)
 		if len(author.Data.List) == 0 {
 			break
 		}
+	}
+}
+
+type ReptileDatas struct {
+	ID            int    `json:"id"`
+	AuthorID      string `json:"author_id"`
+	Nickname      string `json:"nickname"`
+	FollowerCount int    `json:"follower_count"`
+}
+
+func SaveDatabase(data []List) {
+	count += len(data)
+	for _, i2 := range data {
+		fmt.Println("authorID:" + i2.AuthorID + "   nickname:" + i2.Nickname + "   followerCount:" + strconv.Itoa(i2.FollowerCount) + "   limit:" + strconv.Itoa(len(data)) + "  count:" + strconv.Itoa(count))
+		database.DB.Save(&ReptileDatas{AuthorID: i2.AuthorID, Nickname: i2.Nickname, FollowerCount: i2.FollowerCount})
 	}
 }
 

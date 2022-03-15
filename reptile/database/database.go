@@ -2,6 +2,7 @@ package database
 
 import (
 	"fmt"
+	_ "github.com/joho/godotenv/autoload"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
