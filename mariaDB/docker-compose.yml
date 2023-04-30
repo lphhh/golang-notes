@@ -1,0 +1,27 @@
+version: "3.4"
+services:
+  mysql:
+    image: mariadb
+    container_name: mariadb-local
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: lzxxkj99@@
+    ports:
+      - "3306:3306"
+    volumes:
+      - mariadb-db:/var/lib/mysql
+    command:
+      [
+        "--character-set-server=utf8mb4",
+        "--collation-server=utf8mb4_unicode_ci",
+      ]
+    networks:
+      - default
+      - nginx-proxy_nginx-proxy
+volumes:
+  mariadb-db:
+networks:
+  default:
+    driver: bridge
+  nginx-proxy_nginx-proxy:
+    external: true
